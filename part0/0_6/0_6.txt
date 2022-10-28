@@ -1,0 +1,12 @@
+title 0_6
+
+note over browser:
+First, the new note is pushed to the existing ones (clientside!): notes.push(note)
+Then: redrawNotes()
+Only after that, the data is sent to the server: sendToServer(note)
+end note
+
+browser->server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa content="Moikka" date="2022-10-28T16:08:16.764Z"
+server->browser: message="note created"
+
+

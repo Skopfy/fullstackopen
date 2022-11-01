@@ -7,26 +7,57 @@ const Feedback = (props) => {
     return(
 	<>
 	    <h1>Feedback</h1>
-	    <button onClick={IncrementGood}>good</button>
-	    <button onClick={IncrementNeutral}>neutral</button>
-	    <button onClick={IncrementBad}>bad</button>
+	    <Button onClick={IncrementGood} text={"good"} />
+	    <Button onClick={IncrementNeutral} text={"neutral"} />
+	    <Button onClick={IncrementBad} text={"bad"} />
 	    </>
     )
+}
+
+const Button = (props) => {
+  return (
+    <button onClick={props.onClick}>
+      {props.text}
+    </button>
+  )
 }
 
 const Statistics = (props) => {
     const calcAll = () => props.good + props.neutral + props.bad
     const calcAvg = () => (props.good * 1 - props.bad * 1) / calcAll()
     const calcPos = () => props.good / calcAll()
+    const noFeedback = () => (props.good === 0) && (props.neutral === 0) && (props.bad === 0)
+    if (noFeedback())
+    {
+	return (
+		<div>
+		the app is used by pressing the buttons
+	    </div>
+	)
+    }
     return(
 	    <>
 	    <h1>Statistics</h1>
-	    <p>Good reviews: {props.good}</p>
-	    <p>Neutral reviews: {props.neutral}</p>
-	    <p>Bad reviews: {props.bad}</p>
-	    <p>All reviews: {calcAll()} </p>
-	    <p>Average: {calcAvg()} </p>
-	    <p>Positive: {calcPos()} </p>
+	     <table>
+	    < StatisticsLine text={"Good reviews"} stat={props.good} perc={""}/>
+	    < StatisticsLine text={"Neutral reviews"} stat={props.neutral} perc={""}/>
+	    < StatisticsLine text={"Bad reviews"} stat={props.bad} perc={""}/>
+	    < StatisticsLine text={"All reviews"} stat={calcAll()} perc={""}/>
+	    < StatisticsLine text={"Average"} stat={calcAvg()} perc={""}/>
+	    < StatisticsLine text={"Positive"} stat={calcPos()} perc={"%"}/>
+	    </table>
+	    </>
+    )
+}
+
+const StatisticsLine = (props) => {
+
+    return(
+	    <>
+	    <tr>
+	    <td> {props.text} </td>
+	    <td> {props.stat}{props.perc} </td>
+	    </tr>
 	    </>
     )
 }

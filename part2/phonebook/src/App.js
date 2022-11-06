@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Person = ({person}) => {
     return (
@@ -60,13 +61,21 @@ const Numbers = (props) => {
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-      { name: 'Arto Hellas', number: '3521781892780', id: 1},
-      { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-  ]) //List
+    const [persons, setPersons] = useState([]) //List
     const [newName, setNewName] = useState('') //Input
     const [newNumber, setNewNumber] = useState('') //Input
     const [search, setSearch] = useState('') //Input
+
+    useEffect(() =>
+	{
+	    console.log('effect')
+	    axios.
+		get('http://localhost:3001/persons')
+		.then(response => {
+		    console.log('promise fulfilled')
+		    setPersons(response.data)
+		})
+	}, [])
 
 
     const handleNameChange = (event) => {

@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const Button = (props) => {
+  return (
+    <button onClick={props.onClick}>
+      {props.text}
+    </button>
+  )
+}
+
 const Search = (props) => {
     
     return (
@@ -10,10 +18,22 @@ const Search = (props) => {
     )
 }
 
-const Country = ({country}) => {
+const countriesToShow = (search, countries) => {
+	if (search === "") {
+	    return countries
+	}
+	const res = countries.filter(country => country.name.common.toLowerCase().includes(search.toLowerCase()))
+	return res
+
+}
+
+const Country = (props) => {
+    const {country, setSearch} = props
     return (
 	    <>
-	    <li> {country.name.common}</li>
+	    <li>
+	    {country.name.common} <Button onClick={() => setSearch(country.name.common)} text={"Show"}/>
+	</li>
 	    </>
     )
 }
@@ -47,7 +67,7 @@ const SingleCountry = ({country}) => {
 }
 
 const Countries = (props) => {
-    const cs = props.countriesToShow()
+    const cs = props.countriesToShow(props.search, props.countries)
     if (cs.length > 10) {
 	return (
 	    <>
@@ -56,10 +76,11 @@ const Countries = (props) => {
     )
     }
     if (cs.length > 1 || cs.length === 0) {
+	console.log(props.setSearch)
 	return (
 	   <ul>
           {cs.map(country =>
-          <Country key={country.name.common} country={country} />
+		  <Country key={country.name.common} country={country} setSearch={props.setSearch}/>
           )}
       </ul>
     )
@@ -76,14 +97,16 @@ const Countries = (props) => {
 
 function App() {
 
-    const [countries, setCountries] = useState([]) //List
-    const [search, setSearch] = useState('') //Input
+    const [countries, setCountries] = useState([]) 
+    const [search, setSearch] = useState('') 
+    const [showSingle, setShowSingle] = useState(false) 
+    
 
     useEffect(() =>
 	{
 	    console.log('effect')
-	    axios.
-		get('https://restcountries.com/v3.1/all')
+	    axios
+		.get('https://restcountries.com/v3.1/all')
 		.then(response => {
 		    console.log('promise fulfilled')
 		    setCountries(response.data)
@@ -94,20 +117,11 @@ function App() {
 	const filter = event.target.value
 	setSearch(filter)
     }
-
-    const countriesToShow = () => {
-	if (search === "") {
-	    return countries
-	}
-	const res = countries.filter(country => country.name.common.toLowerCase().includes(search.toLowerCase()))
-	return res
-
-    }
     
   return (
     <div>
 	  <Search  countries={countries} search={search} setSearch={setSearch} handleSearchChange={handleSearchChange}/>
-	  <Countries  countriesToShow={countriesToShow}/>
+	  <Countries  countriesToShow={countriesToShow} search={search} setSearch={setSearch} countries={countries} showSingle={showSingle} setShowSingle={setShowSingle}/>
     </div>
   );
 }

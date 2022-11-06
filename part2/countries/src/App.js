@@ -76,7 +76,6 @@ const Countries = (props) => {
     )
     }
     if (cs.length > 1 || cs.length === 0) {
-	console.log(props.setSearch)
 	return (
 	   <ul>
           {cs.map(country =>
@@ -85,30 +84,53 @@ const Countries = (props) => {
       </ul>
     )
     }
-    console.log(cs[0])
     return (
 	    <>
             <SingleCountry key={cs[0].name.common} country={cs[0]} />
+	    <Weather key={cs[0].capital[0]} country={cs[0]} api_key={props.api_key} weather={props.weather} setWeather={props.setWeather}/>
 	    </>
     )
     
 }
 
+const Weather = (props) => {
+    const {country, api_key, weather, setWeather} = props
+    const url =  `https://api.openweathermap.org/data/2.5/weather?q=${country.capital}&units=metric&appid=${api_key}`
+    useEffect(() =>
+	{
+	    axios
+		.get(url)
+		.then(response => {
+		    setWeather(response.data)
+		})
+	}, [])
+    
+    return (
+	    <>
+	    <h3> Weather in {country.capital}</h3>
+	    <p> Temperature: {weather && weather.main.temp}°C</p>
+	    <img
+        src={weather && `http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+        alt={weather && weather.weather.description}
+	    />
+	    <p> Wind: {weather && weather.wind.speed}km/h</p>
+	    </>
+    )
+}
+
 
 function App() {
 
-    const [countries, setCountries] = useState([]) 
-    const [search, setSearch] = useState('') 
-    const [showSingle, setShowSingle] = useState(false) 
-    
+    const [countries, setCountries] = useState([])
+    const [weather, setWeather] = useState(null)
+    const [search, setSearch] = useState('')  
+    const api_key = process.env.REACT_APP_API_KEY
 
     useEffect(() =>
 	{
-	    console.log('effect')
 	    axios
 		.get('https://restcountries.com/v3.1/all')
 		.then(response => {
-		    console.log('promise fulfilled')
 		    setCountries(response.data)
 		})
 	}, [])
@@ -121,7 +143,7 @@ function App() {
   return (
     <div>
 	  <Search  countries={countries} search={search} setSearch={setSearch} handleSearchChange={handleSearchChange}/>
-	  <Countries  countriesToShow={countriesToShow} search={search} setSearch={setSearch} countries={countries} showSingle={showSingle} setShowSingle={setShowSingle}/>
+	  <Countries  api_key={api_key} countriesToShow={countriesToShow} search={search} setSearch={setSearch} countries={countries} weather={weather} setWeather={setWeather}/>
     </div>
   );
 }

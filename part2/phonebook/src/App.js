@@ -57,15 +57,38 @@ const AddPerson = (props) => {
 	    number: props.newNumber,
 	    id: props.persons.length + 1,
 	}
-	personService
-	    .create(personObject)
-	    .then(newPerson => {
-		props.setPersons(props.persons.concat(newPerson))
-		props.setNewName('')
-		props.setNewNumber('')
-	    })
-	
-	
+	const foundExistingPerson = props.persons.find(element => element.name === props.newName)
+	if (foundExistingPerson) {
+	    replacePerson(personObject, foundExistingPerson)
+	} else {
+	    personService
+		.create(personObject)
+		.then(newPerson => {
+		    props.setPersons(props.persons.concat(newPerson))
+		    props.setNewName('')
+		    props.setNewNumber('')
+		})
+	}
+    }
+
+    const replacePerson = (personObject, find) => {
+	if (window.confirm(`Do you want to replace the number of ${props.newName}?`)) {
+		personObject.id = find.id
+		personService
+		    .put(personObject)
+		    .then(newPerson => {
+			var cpy = []
+			for (const p of props.persons) {
+			    if (p.name !== props.newName) {
+				cpy = cpy.concat(p)
+			    }
+			}
+			    cpy = cpy.concat(newPerson)
+			props.setPersons(cpy)
+			props.setNewName('')
+			    props.setNewNumber('')
+		    })
+	    }
     }
     
     return (

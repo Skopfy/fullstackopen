@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './index.css'
 
 const Person = (props) => {
     const {person} = props
@@ -25,6 +26,10 @@ const deletePerson = (props) => {
 			}
 		    }
 		    setPersons(cpy)
+		    props.setSuccessMessage(`Removed ${person.name}.`)
+		    setTimeout(() => {
+			props.setSuccessMessage(null)
+		    }, 5000)
 	    })
 	}
     }
@@ -67,6 +72,10 @@ const AddPerson = (props) => {
 		    props.setPersons(props.persons.concat(newPerson))
 		    props.setNewName('')
 		    props.setNewNumber('')
+		    props.setSuccessMessage(`Added ${props.newName}.`)
+		    setTimeout(() => {
+			props.setSuccessMessage(null)
+		    }, 5000)
 		})
 	}
     }
@@ -86,7 +95,11 @@ const AddPerson = (props) => {
 			    cpy = cpy.concat(newPerson)
 			props.setPersons(cpy)
 			props.setNewName('')
-			    props.setNewNumber('')
+			props.setNewNumber('')
+			props.setSuccessMessage(`Replaced number of ${props.newName}.`)
+			setTimeout(() => {
+			    props.setSuccessMessage(null)
+			}, 5000)
 		    })
 	    }
     }
@@ -112,10 +125,22 @@ const Numbers = (props) => {
     return (
 	   <ul>
           {(props.personsToShow()).map(person =>
-		  <Person key={person.id} person={person} setPersons={props.setPersons} persons={props.persons}/>
+		  <Person key={person.id} person={person} setPersons={props.setPersons} persons={props.persons} setSuccessMessage={props.setSuccessMessage}/>
           )}
       </ul>
     )
+}
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='operationSuccess'>
+      {message}
+    </div>
+  )
 }
 
 
@@ -124,6 +149,7 @@ const App = () => {
     const [newName, setNewName] = useState('') //Input
     const [newNumber, setNewNumber] = useState('') //Input
     const [search, setSearch] = useState('') //Input
+    const [successMessage, setSuccessMessage] = useState('Success!')
 
     useEffect(() =>
 	{
@@ -168,9 +194,10 @@ const App = () => {
 	  <h2>Phonebook</h2>
           <Search  persons={persons} search={search} setSearch={setSearch} handleSearchChange={handleSearchChange}/>
 	  <h2>Add a new contact</h2>
-	  <AddPerson  persons={persons} setPersons={setPersons} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
+	  <Notification message={successMessage} />
+	  <AddPerson  persons={persons} setPersons={setPersons} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} setSuccessMessage={setSuccessMessage}/>
 	  <h2>Numbers</h2>
-	  <Numbers  personsToShow={personsToShow} setPersons={setPersons} persons={persons}/>
+	  <Numbers  personsToShow={personsToShow} setPersons={setPersons} persons={persons} setSuccessMessage={setSuccessMessage}/>
     </div>
   )
 }

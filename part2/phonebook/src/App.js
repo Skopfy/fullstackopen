@@ -19,13 +19,7 @@ const deletePerson = (props) => {
 	    personService
 		.remove(person.id)
 		.then(status => {
-		    var cpy = []
-		    for (const p of persons) {
-			if (person.id !== p.id) {
-			    cpy = cpy.concat(p)
-			}
-		    }
-		    setPersons(cpy)
+		    props.setPersons(props.persons.filter(p => p.id !== person.id))
 		    props.setSuccessMessage(`Removed ${person.name}.`)
 		    setTimeout(() => {
 			props.setSuccessMessage(null)
@@ -82,25 +76,26 @@ const AddPerson = (props) => {
 
     const replacePerson = (personObject, find) => {
 	if (window.confirm(`Do you want to replace the number of ${props.newName}?`)) {
-		personObject.id = find.id
-		personService
-		    .put(personObject)
-		    .then(newPerson => {
-			var cpy = []
-			for (const p of props.persons) {
-			    if (p.name !== props.newName) {
-				cpy = cpy.concat(p)
-			    }
-			}
-			    cpy = cpy.concat(newPerson)
-			props.setPersons(cpy)
-			props.setNewName('')
-			props.setNewNumber('')
-			props.setSuccessMessage(`Replaced number of ${props.newName}.`)
-			setTimeout(() => {
+	    personObject.id = find.id
+	    personService
+		.put(personObject)
+		.then(newPerson => {
+		    props.setPersons(props.persons.filter(p => p.id !== find.id).concat(newPerson))
+		    personObject.id = newPerson.id //case of promise rejected
+		    props.setNewName('')
+		    props.setNewNumber('')
+		    props.setSuccessMessage(`Replaced number of ${props.newName}.`)
+		    setTimeout(() => {
 			    props.setSuccessMessage(null)
 			}, 5000)
-		    })
+		})
+		.catch(error => {
+		    props.setFailMessage(`${props.newName} was already removed from the server.`)
+			setTimeout(() => {
+			    props.setFailMessage(null)
+			}, 5000)
+		    props.setPersons(props.persons.filter(p => p.id !== personObject.id))
+		})
 	    }
     }
     
@@ -145,11 +140,12 @@ const Notification = ({ message }) => {
 
 
 const App = () => {
-    const [persons, setPersons] = useState([]) //List
-    const [newName, setNewName] = useState('') //Input
-    const [newNumber, setNewNumber] = useState('') //Input
-    const [search, setSearch] = useState('') //Input
-    const [successMessage, setSuccessMessage] = useState('Success!')
+    const [persons, setPersons] = useState([]) 
+    const [newName, setNewName] = useState('') 
+    const [newNumber, setNewNumber] = useState('') 
+    const [search, setSearch] = useState('') 
+    const [successMessage, setSuccessMessage] = useState(null)
+    const [failMessage, setFailMessage] = useState(null)
 
     useEffect(() =>
 	{
@@ -195,7 +191,8 @@ const App = () => {
           <Search  persons={persons} search={search} setSearch={setSearch} handleSearchChange={handleSearchChange}/>
 	  <h2>Add a new contact</h2>
 	  <Notification message={successMessage} />
-	  <AddPerson  persons={persons} setPersons={setPersons} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} setSuccessMessage={setSuccessMessage}/>
+	  <Notification message={failMessage} />
+	  <AddPerson  persons={persons} setPersons={setPersons} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} setSuccessMessage={setSuccessMessage} setFailMessage={setFailMessage}/>
 	  <h2>Numbers</h2>
 	  <Numbers  personsToShow={personsToShow} setPersons={setPersons} persons={persons} setSuccessMessage={setSuccessMessage}/>
     </div>

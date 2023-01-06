@@ -78,6 +78,33 @@ describe('GET /api/blogs', () => {
     })
 })
 
+describe('POST /api/blogs', () => {
+test('a new blog can be added. No of posts is incremented & saved blog correctly fetched from db', async () => {
+    const newBlog =  {
+    title: "New blog",
+    author: "Von Neumann",
+    url: "https://newpatterns.com/",
+    likes: 20,
+    }
+
+    
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const titles = response.body.map(r => r.title)
+
+  expect(response.body).toHaveLength(initial_blogs.length + 1) //Test increment
+  expect(titles).toContain( //Test if saved to db
+    'New blog'
+  )
+})   
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

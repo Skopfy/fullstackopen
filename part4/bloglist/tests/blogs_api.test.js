@@ -79,30 +79,81 @@ describe('GET /api/blogs', () => {
 })
 
 describe('POST /api/blogs', () => {
-test('a new blog can be added. No of posts is incremented & saved blog correctly fetched from db', async () => {
-    const newBlog =  {
-    title: "New blog",
-    author: "Von Neumann",
-    url: "https://newpatterns.com/",
-    likes: 20,
-    }
-
+    //Ex 4.10
+    test('a new blog can be added. No of posts is incremented & saved blog correctly fetched from db', async () => {
+	const newBlog =  {
+	    title: "New blog",
+	    author: "Von Neumann",
+	    url: "https://newpatterns.com/",
+	    likes: 20,
+	}
+	
     
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+	await api
+	    .post('/api/blogs')
+	    .send(newBlog)
+	    .expect(201)
+	    .expect('Content-Type', /application\/json/)
 
-  const response = await api.get('/api/blogs')
+	const response = await api.get('/api/blogs')
+	const titles = response.body.map(r => r.title)
+	
+	expect(response.body).toHaveLength(initial_blogs.length + 1) //Test increment
+	expect(titles).toContain( //Test if saved to db
+	    'New blog'
+	)
+    })
+    
+    //Ex 4.11
+    test('if a new blog without the likes property is added it defaults to zero', async () => {
+	const newBlog =  {
+	    title: "New blog without likes",
+	    author: "Von Neumann",
+	    url: "https://newpatterns.com/",
+	}
+	
+    
+	await api
+	    .post('/api/blogs')
+	    .send(newBlog)
+	    .expect(201)
+	    .expect('Content-Type', /application\/json/)
 
-  const titles = response.body.map(r => r.title)
+	const response = await api.get('/api/blogs')
+	const len_blogs = response.body.length
+	const titles = response.body.map(r => r.title)
+	
+	
+	expect(response.body).toHaveLength(initial_blogs.length + 1)
+	expect(titles).toContain( //Test if saved to db
+	    'New blog without likes'
+	)
+	expect(response.body[len_blogs - 1].likes).toBe(0)
+    })
+    //Ex 4.12
+    test('if title is missing, respond with 400 Bad Request', async () => {
+	const newBlog =  {
+	    author: "Mr. NoTitle",
+	    url: "https://notitle.com/",
+	    likes: 5,
+	}
+	
+    
+	await api
+	    .post('/api/blogs')
+	    .send(newBlog)
+	    .expect(400)
+	    //.expect('Content-Type', /application\/json/)
 
-  expect(response.body).toHaveLength(initial_blogs.length + 1) //Test increment
-  expect(titles).toContain( //Test if saved to db
-    'New blog'
-  )
-})   
+	/*const response = await api.get('/api/blogs')
+	
+	const titles = response.body.map(r => r.title)
+	
+	expect(response.body).toHaveLength(initial_blogs.length + 1) //Test increment
+	expect(titles).toContain( //Test if saved to db
+	    'New blog'
+	)*/
+    })
 })
 
 afterAll(() => {

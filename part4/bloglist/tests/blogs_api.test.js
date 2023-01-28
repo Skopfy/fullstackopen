@@ -131,7 +131,7 @@ describe('POST /api/blogs', () => {
 	expect(response.body[len_blogs - 1].likes).toBe(0)
     })
     //Ex 4.12
-    test('if title is missing, respond with 400 Bad Request', async () => {
+    test('if title or url is missing, respond with 400 Bad Request', async () => {
 	const newBlog =  {
 	    author: "Mr. NoTitle",
 	    url: "https://notitle.com/",
@@ -143,16 +143,19 @@ describe('POST /api/blogs', () => {
 	    .post('/api/blogs')
 	    .send(newBlog)
 	    .expect(400)
-	    //.expect('Content-Type', /application\/json/)
 
-	/*const response = await api.get('/api/blogs')
+	const newBlog2 =  {
+	    title: "NoUrl",
+	    author: "Mr. NoUrl",
+	    likes: 5,
+	}
 	
-	const titles = response.body.map(r => r.title)
-	
-	expect(response.body).toHaveLength(initial_blogs.length + 1) //Test increment
-	expect(titles).toContain( //Test if saved to db
-	    'New blog'
-	)*/
+    
+	await api
+	    .post('/api/blogs')
+	    .send(newBlog2)
+	    .expect(400)
+
     })
 })
 

@@ -159,6 +159,26 @@ describe('POST /api/blogs', () => {
     })
 })
 
+describe('DELETE /api/blogs', () => {
+    //Ex 4.13
+    test('To be deleted blog is missing and no of blogs reduced by one', async () => {
+	
+	const id = (initial_blogs[0])._id
+	await api
+	      .delete(`/api/blogs/${id}`)
+	    .expect(204)
+
+	const response = await api.get('/api/blogs')
+	const ids = response.body.map(r => r.id)
+	
+	expect(response.body).toHaveLength(initial_blogs.length - 1)
+	expect(ids).not.toContain(id)
+	
+    
+
+    })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

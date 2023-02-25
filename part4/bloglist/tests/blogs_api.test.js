@@ -179,6 +179,25 @@ describe('DELETE /api/blogs', () => {
     })
 })
 
+describe('PUT /api/blogs', () => {
+    //Ex 4.14
+    test('Check if no of likes has changed afterwards.', async () => {
+	
+	const id = (initial_blogs[0])._id
+	const updatedBlog = {likes: 42,}
+	await api
+	    .put(`/api/blogs/${id}`)
+	    .send(updatedBlog)
+	    .expect(200)
+	    .expect('Content-Type', /application\/json/)
+
+	const response = await api.get('/api/blogs')
+	const blogs = response.body.map(r => r)
+	expect(blogs[0].likes).toBe(42)
+
+    })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initial_blogs = [
   {
@@ -55,6 +56,19 @@ const initial_blogs = [
   }  
 ]
 
+user_token = ""
+
+beforeEach(async () => {
+    //Add token here
+    const userPw = {
+	username: "user",
+	password: "password",
+    }
+    await api.post('/api/users').send(userPw)
+    const login_response = await api.post('/api/login').send(userPw)
+    user_token = "Bearer " + login_response.body.token
+})
+
 beforeEach(async () => {
     await Blog.deleteMany({})
     for (const blog of initial_blogs) {
@@ -64,16 +78,17 @@ beforeEach(async () => {
 })
 describe('GET /api/blogs', () => {
     test('api: blogs are returned as json & the correct amount', async () => {
-    await api.get('/api/blogs')
-	.expect(200)
-	.expect('Content-Type', /application\/json/)
+	await api.get('/api/blogs')
+	    .set('Authorization', user_token)
+	    .expect(200)
+	    .expect('Content-Type', /application\/json/)
     
-    const response = await api.get('/api/blogs')
+    const response = await api.get('/api/blogs').set('Authorization', user_token)
     expect(response.body).toHaveLength(initial_blogs.length)
     })
 
     test('api: blogs have identifier "id" as property', async () => {
-	const response = await api.get('/api/blogs')
+	const response = await api.get('/api/blogs').set('Authorization', user_token)
 	expect((response.body)[0].id).toBeDefined();
     })
 })
@@ -91,11 +106,12 @@ describe('POST /api/blogs', () => {
     
 	await api
 	    .post('/api/blogs')
+	    .set('Authorization', user_token)
 	    .send(newBlog)
 	    .expect(201)
 	    .expect('Content-Type', /application\/json/)
 
-	const response = await api.get('/api/blogs')
+	const response = await api.get('/api/blogs').set('Authorization', user_token)
 	const titles = response.body.map(r => r.title)
 	
 	expect(response.body).toHaveLength(initial_blogs.length + 1) //Test increment
@@ -115,11 +131,12 @@ describe('POST /api/blogs', () => {
     
 	await api
 	    .post('/api/blogs')
+	    .set('Authorization', user_token)
 	    .send(newBlog)
 	    .expect(201)
 	    .expect('Content-Type', /application\/json/)
 
-	const response = await api.get('/api/blogs')
+	const response = await api.get('/api/blogs').set('Authorization', user_token)
 	const len_blogs = response.body.length
 	const titles = response.body.map(r => r.title)
 	
@@ -141,6 +158,7 @@ describe('POST /api/blogs', () => {
     
 	await api
 	    .post('/api/blogs')
+	    .set('Authorization', user_token)
 	    .send(newBlog)
 	    .expect(400)
 
@@ -153,8 +171,25 @@ describe('POST /api/blogs', () => {
     
 	await api
 	    .post('/api/blogs')
+	    .set('Authorization', user_token)
 	    .send(newBlog2)
 	    .expect(400)
+
+    })
+    //4.23
+    test('if token is missing, respond with 401 Unauthorized', async () => {
+	const newBlog =  {
+	    author: "Mr. NoToken",
+	    title: "NoToken",
+	    url: "https://notoken.com/",
+	    likes: 5,
+	}
+	
+    
+	await api
+	    .post('/api/blogs')
+	    .send(newBlog)
+	    .expect(401)
 
     })
 })
@@ -163,15 +198,29 @@ describe('DELETE /api/blogs', () => {
     //Ex 4.13
     test('To be deleted blog is missing and no of blogs reduced by one', async () => {
 	
-	const id = (initial_blogs[0])._id
+	const newBlog =  {
+	    title: "New blog with user",
+	    author: "user",
+	    url: "https://newpatterns.com/",
+	}
+	
+    
+	const post_response = await api
+	    .post('/api/blogs')
+	    .set('Authorization', user_token)
+	      .send(newBlog)
+
+	const id = post_response.body.id
+	
 	await api
-	      .delete(`/api/blogs/${id}`)
+	    .delete(`/api/blogs/${id}`)
+	    .set('Authorization', user_token)
 	    .expect(204)
 
-	const response = await api.get('/api/blogs')
+	const response = await api.get('/api/blogs').set('Authorization', user_token)
 	const ids = response.body.map(r => r.id)
 	
-	expect(response.body).toHaveLength(initial_blogs.length - 1)
+	expect(response.body).toHaveLength(initial_blogs.length)
 	expect(ids).not.toContain(id)
 	
     
@@ -187,11 +236,12 @@ describe('PUT /api/blogs', () => {
 	const updatedBlog = {likes: 42,}
 	await api
 	    .put(`/api/blogs/${id}`)
+	    .set('Authorization', user_token)
 	    .send(updatedBlog)
 	    .expect(200)
 	    .expect('Content-Type', /application\/json/)
 
-	const response = await api.get('/api/blogs')
+	const response = await api.get('/api/blogs').set('Authorization', user_token)
 	const blogs = response.body.map(r => r)
 	expect(blogs[0].likes).toBe(42)
 

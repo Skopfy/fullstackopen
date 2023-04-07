@@ -11,12 +11,14 @@ const App = () => {
     title: '',
     author: '',
     url: '',
-  })
+  }
+  )
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -36,7 +38,7 @@ const App = () => {
     }
   }, [])
 
-  
+
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -49,8 +51,10 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setSuccessMessage('Successfully logged in.')
+      setTimeout(() => { setSuccessMessage(null) }, 5000)
     } catch (exception) {
-      setErrorMessage('wrong credentials')
+      setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -59,6 +63,8 @@ const App = () => {
   const handleLogout = async (event) => {
     window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
+    setSuccessMessage('Successfully logged out.')
+    setTimeout(() => { setSuccessMessage(null) }, 5000)
   }
 
 
@@ -77,7 +83,16 @@ const App = () => {
           title: '',
           author: '',
           url: '',
-        })
+        }
+        )
+        setSuccessMessage('Successfully added a blog.')
+        setTimeout(() => { setSuccessMessage(null) }, 5000)
+      })
+      .catch(error => {
+        setErrorMessage('Could not add a blog.')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
   }
 
@@ -148,6 +163,8 @@ const App = () => {
     return (
       <div>
         <h1>Blogs app</h1>
+        <Notification message={errorMessage} cla={'error'} />
+        <Notification message={successMessage} cla={'success'} />
         {loginForm()}
       </div>
     )
@@ -155,7 +172,8 @@ const App = () => {
     return (
       <div>
         <h1>Blogs app</h1>
-        <Notification message={errorMessage} />
+        <Notification message={errorMessage} cla={'error'} />
+        <Notification message={successMessage} cla={'success'} />
         {user && <div>
           <p>{user.username} logged in <button onClick={handleLogout}>logout</button> </p>
           {blogForm()}

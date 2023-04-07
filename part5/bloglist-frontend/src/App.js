@@ -19,18 +19,32 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if (loggedUserJSON) {
+      blogService.getAll().then(blogs =>
+        setBlogs(blogs)
+      )
+    }
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
+  
+
   const handleLogin = async (event) => {
-    console.log('handleLogin()')
     event.preventDefault()
     try {
       const user = await loginService.login({
         username, password,
       })
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -42,16 +56,19 @@ const App = () => {
       }, 5000)
     }
   }
+  const handleLogout = async (event) => {
+    window.localStorage.removeItem('loggedBlogAppUser')
+    setUser(null)
+  }
+
 
   const addBlog = (event) => {
     event.preventDefault()
-    console.log('addBlog')
     const blogObject = {
       title: newBlog.title,
       author: newBlog.author,
       url: newBlog.url,
     }
-    console.log(blogObject)
     blogService
       .create(blogObject)
       .then(returnedBlog => {
@@ -140,7 +157,7 @@ const App = () => {
         <h1>Blogs app</h1>
         <Notification message={errorMessage} />
         {user && <div>
-          <p>{user.username} logged in</p>
+          <p>{user.username} logged in <button onClick={handleLogout}>logout</button> </p>
           {blogForm()}
         </div>
         }

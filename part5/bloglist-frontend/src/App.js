@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -20,6 +20,8 @@ const App = () => {
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -88,6 +90,7 @@ const App = () => {
         )
         setSuccessMessage('Successfully added a blog.')
         setTimeout(() => { setSuccessMessage(null) }, 5000)
+        blogFormRef.current.toggleVisibility()
       })
       .catch(error => {
         setErrorMessage('Could not add a blog.')
@@ -147,7 +150,7 @@ const App = () => {
         <Notification message={successMessage} cla={'success'} />
         {user && <div>
           <p>{user.username} logged in <button onClick={handleLogout}>logout</button> </p>
-          <Togglable buttonLabel="new blog">
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogForm
               addBlog={addBlog}
               newBlog={newBlog}

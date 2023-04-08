@@ -2,6 +2,8 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,8 +13,7 @@ const App = () => {
     title: '',
     author: '',
     url: '',
-  }
-  )
+  })
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -129,36 +130,6 @@ const App = () => {
     </form>
   )
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        title
-        <input
-          value={newBlog.title}
-          name="title"
-          onChange={handleBlogChange}
-        />
-      </div>
-      <div>
-        author
-        <input
-          value={newBlog.author}
-          name="author"
-          onChange={handleBlogChange}
-        />
-      </div>
-      <div>
-        url
-        <input
-          value={newBlog.url}
-          name="url"
-          onChange={handleBlogChange}
-        />
-      </div>
-      <button type="submit">save</button>
-    </form>
-  )
-
   if (user === null) {
     return (
       <div>
@@ -176,7 +147,13 @@ const App = () => {
         <Notification message={successMessage} cla={'success'} />
         {user && <div>
           <p>{user.username} logged in <button onClick={handleLogout}>logout</button> </p>
-          {blogForm()}
+          <Togglable buttonLabel="new blog">
+            <BlogForm
+              addBlog={addBlog}
+              newBlog={newBlog}
+              handleBlogChange={handleBlogChange}
+            />
+          </Togglable>
         </div>
         }
 

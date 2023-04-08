@@ -1,7 +1,37 @@
 import React from 'react'
+import { useState } from 'react'
 
-const BlogForm = ({ addBlog, handleBlogChange, newBlog }) => (
-  < form onSubmit = { addBlog } >
+const BlogForm = ({ createBlog}) => {
+  const [newBlog, setNewBlog] = useState({
+    title: '',
+    author: '',
+    url: '',
+  })
+
+  const addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: newBlog.title,
+      author: newBlog.author,
+      url: newBlog.url,
+    }
+    createBlog(blogObject)
+    setNewBlog({
+      title: '',
+      author: '',
+      url: '',
+    })
+  }
+
+  const handleBlogChange = (event) => {
+    setNewBlog({
+      ...newBlog,
+      [event.target.name]: event.target.value
+    })
+  }
+
+
+  return (< form onSubmit={addBlog} >
     <div>
       title
       <input
@@ -28,6 +58,7 @@ const BlogForm = ({ addBlog, handleBlogChange, newBlog }) => (
     </div>
     <button type="submit">save</button>
   </form >
-)
+  )
+}
 
 export default BlogForm

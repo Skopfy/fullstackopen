@@ -9,11 +9,6 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newBlog, setNewBlog] = useState({
-    title: '',
-    author: '',
-    url: '',
-  })
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -71,23 +66,11 @@ const App = () => {
   }
 
 
-  const addBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: newBlog.title,
-      author: newBlog.author,
-      url: newBlog.url,
-    }
+  const addBlog = (blogObject) => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setNewBlog({
-          title: '',
-          author: '',
-          url: '',
-        }
-        )
         setSuccessMessage('Successfully added a blog.')
         setTimeout(() => { setSuccessMessage(null) }, 5000)
         blogFormRef.current.toggleVisibility()
@@ -99,15 +82,6 @@ const App = () => {
         }, 5000)
       })
   }
-
-  const handleBlogChange = (event) => {
-    setNewBlog({
-      ...newBlog,
-      [event.target.name]: event.target.value
-    })
-  }
-
-
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -152,9 +126,7 @@ const App = () => {
           <p>{user.username} logged in <button onClick={handleLogout}>logout</button> </p>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogForm
-              addBlog={addBlog}
-              newBlog={newBlog}
-              handleBlogChange={handleBlogChange}
+              createBlog={addBlog}
             />
           </Togglable>
         </div>

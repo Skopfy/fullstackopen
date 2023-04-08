@@ -6,6 +6,8 @@ const BlogForm = ({ createBlog}) => {
     title: '',
     author: '',
     url: '',
+    likes: 0,
+    user: ''
   })
 
   const addBlog = (event) => {
@@ -20,6 +22,8 @@ const BlogForm = ({ createBlog}) => {
       title: '',
       author: '',
       url: '',
+      likes: 0,
+      user: ''
     })
   }
 

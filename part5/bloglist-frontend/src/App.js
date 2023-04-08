@@ -70,6 +70,8 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
+        console.log('Returned Blog')
+        console.log(returnedBlog)
         setBlogs(blogs.concat(returnedBlog))
         setSuccessMessage('Successfully added a blog.')
         setTimeout(() => { setSuccessMessage(null) }, 5000)

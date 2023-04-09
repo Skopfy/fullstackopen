@@ -97,6 +97,17 @@ const App = () => {
       })
   }
 
+  function compareBlogsByLikes(blogA, blogB) {
+    if (blogA.likes > blogB.likes) {
+      return -1
+    }
+    if (blogA.likes < blogB.likes) {
+      return 1
+    }
+    // a must be equal to b
+    return 0
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -148,7 +159,7 @@ const App = () => {
 
 
         <h2>blogs</h2>
-        {blogs.map(blog =>
+        {blogs.sort(compareBlogsByLikes).map(blog =>
           <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         )}
       </div>

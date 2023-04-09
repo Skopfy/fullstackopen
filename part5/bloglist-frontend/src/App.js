@@ -82,6 +82,21 @@ const App = () => {
       })
   }
 
+  const updateBlog = (blogObject) => {
+    blogService
+      .update(blogObject.id, blogObject)
+      .then(() => {
+        setSuccessMessage('Successfully updated a blog.')
+        setTimeout(() => { setSuccessMessage(null) }, 5000)
+      })
+      .catch(error => {
+        setErrorMessage(`Could not update a blog. Error: ${error}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -134,7 +149,7 @@ const App = () => {
 
         <h2>blogs</h2>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         )}
       </div>
     )

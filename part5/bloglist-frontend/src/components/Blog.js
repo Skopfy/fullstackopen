@@ -26,7 +26,7 @@ const Blog = ({ blog }) => {
       <div style={showWhenVisible}>
         {blog.url}
         <div> likes: {blog.likes} <button onClick={toggleVisibility}>Like</button> </div>
-        {blog.user}
+        {blog.user.username}
       </div>
     </div >
   )

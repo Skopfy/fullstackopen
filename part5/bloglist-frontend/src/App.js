@@ -21,20 +21,18 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
-      blogService.getAll().then(blogs =>
-        setBlogs(blogs)
-      )
-    }
-  }, [])
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
     }
+    blogService.
+      getAll().
+      then(initialBlogs => {
+        setBlogs(initialBlogs)
+      }
+      )
   }, [])
+
 
 
 
@@ -58,7 +56,7 @@ const App = () => {
       }, 5000)
     }
   }
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
     setSuccessMessage('Successfully logged out.')
@@ -70,17 +68,14 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
-        console.log('Returned Blog')
-        console.log(returnedBlog)
-        returnedBlog.user = user.username
-        console.log(returnedBlog)
+        returnedBlog.user = user
         setBlogs(blogs.concat(returnedBlog))
         setSuccessMessage('Successfully added a blog.')
         setTimeout(() => { setSuccessMessage(null) }, 5000)
         blogFormRef.current.toggleVisibility()
       })
       .catch(error => {
-        setErrorMessage('Could not add a blog.')
+        setErrorMessage(`Could not add a blog. Error: ${error}`)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)

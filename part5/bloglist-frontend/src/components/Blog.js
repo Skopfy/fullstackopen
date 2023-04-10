@@ -1,11 +1,19 @@
 import React from 'react'
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
+
+  const loggedUser = JSON.parse(window.localStorage.getItem('loggedBlogAppUser'))
+
+  const rightUser = () => {
+    return blog.user.username === loggedUser.username
+  }
+
+  const showWhenRightUser = { display: rightUser() ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -16,6 +24,9 @@ const Blog = ({ blog, updateBlog }) => {
     updateBlog(blog)
   }
 
+  const removeBlog = () => {
+    deleteBlog(blog)
+  }
 
   const blogStyle = {
     paddingTop: 10,
@@ -32,6 +43,7 @@ const Blog = ({ blog, updateBlog }) => {
         {blog.url}
         <div> likes: {blog.likes} <button onClick={increaseLike}>Like</button> </div>
         {blog.user.username}
+        <div style={showWhenRightUser}>  <button onClick={removeBlog}>Delete</button> </div>
       </div>
     </div >
   )

@@ -97,6 +97,28 @@ const App = () => {
       })
   }
 
+  const deleteBlog = (blogObject) => {
+    if (window.confirm('Do you really want to delete this blogpost?')) {
+      blogService
+        .remove(blogObject.id)
+        .then(() => {
+          const idx = blogs.indexOf(blogObject)
+          if (idx !== -1) {
+            blogs.splice(idx, 1)
+          }
+          setSuccessMessage('Successfully deleted a blog.')
+          setTimeout(() => { setSuccessMessage(null) }, 5000)
+        })
+        .catch(error => {
+          setErrorMessage(`Could not delete the blog. Error: ${error}`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
+    }
+
+  }
+
   function compareBlogsByLikes(blogA, blogB) {
     if (blogA.likes > blogB.likes) {
       return -1
@@ -104,7 +126,6 @@ const App = () => {
     if (blogA.likes < blogB.likes) {
       return 1
     }
-    // a must be equal to b
     return 0
   }
 
@@ -160,7 +181,7 @@ const App = () => {
 
         <h2>blogs</h2>
         {blogs.sort(compareBlogsByLikes).map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} />
         )}
       </div>
     )

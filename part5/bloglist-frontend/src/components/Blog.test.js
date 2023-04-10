@@ -16,8 +16,10 @@ describe('Test rendering of blog component', () => {
         id: '6409b3ec84ae8b9a4073f070'
       }
     }
+    const updateBlog = jest.fn()
+    const deleteBlog = jest.fn()
     window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(blog.user))
-    const { container } = render(<Blog blog={blog} />)
+    const { container } = render(<Blog blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog}/>)
     const div = container.querySelector('.blog')
     expect(div).toHaveTextContent('Component testing is done with react-testing-library example')
     const hidden = container.querySelector('.blog_hidden')
@@ -37,9 +39,11 @@ describe('Test rendering of blog component', () => {
     }
 
     const mockHandler = jest.fn()
+    const updateBlog = jest.fn()
+    const deleteBlog = jest.fn()
 
     window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(blog.user))
-    const { container } = render(<Blog blog={blog} />)
+    const { container } = render(<Blog blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog}/>)
 
     const user = userEvent.setup()
     const button = screen.getByText('Show')
@@ -50,5 +54,33 @@ describe('Test rendering of blog component', () => {
     const hidden = container.querySelector('.blog_hidden')
     expect(hidden).toHaveTextContent('abc.com likes: 0 Like user')
     expect(hidden).not.toHaveStyle('display: none')
+  })
+
+  test('clicking the like button twice makes the event handler gets called twice', async () => {
+    const blog = {
+      title: 'Component testing is done with react-testing-library',
+      author: 'example',
+      url: 'abc.com',
+      likes: 0,
+      user: {
+        username: 'user',
+        id: '6409b3ec84ae8b9a4073f070'
+      }
+    }
+
+    const mockHandler = jest.fn()
+    const updateBlog = jest.fn()
+    const deleteBlog = jest.fn()
+
+    window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(blog.user))
+    render(<Blog blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog}/>)
+
+    const user = userEvent.setup()
+    const button = screen.getByText('Like')
+
+    button.onclick = mockHandler
+    await user.click(button)
+    await user.click(button)
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })

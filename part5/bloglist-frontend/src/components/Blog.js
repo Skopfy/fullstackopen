@@ -37,18 +37,18 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     marginBottom: 5
   }
   return (
-    <li className='blog'>
-      < div style={blogStyle} >
-        {blog.title} {blog.author} <button onClick={toggleVisibility} style={showWhenVisible}>Hide</button>
-        <button onClick={toggleVisibility} style={hideWhenVisible}>Show</button>
-        <div style={showWhenVisible}>
+    < div style={blogStyle} className='blog'>
+      {blog.title} {blog.author} <button onClick={toggleVisibility} style={showWhenVisible}>Hide</button>
+      <button onClick={toggleVisibility} style={hideWhenVisible}>Show</button>
+      <div style={showWhenVisible} className='blog_hidden'>
+        <div>
           {blog.url}
           <div> likes: {blog.likes} <button onClick={increaseLike}>Like</button> </div>
           {blog.user.username}
-          <div style={showWhenRightUser}>  <button onClick={removeBlog}>Delete</button> </div>
         </div>
-      </div >
-    </li>
+        <div style={showWhenRightUser}>  <button onClick={removeBlog}>Delete</button> </div>
+      </div>
+    </div >
   )
 }
 

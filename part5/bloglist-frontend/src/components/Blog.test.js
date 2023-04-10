@@ -4,9 +4,10 @@ import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
 
 describe('Test rendering of blog component', () => {
-  test('renders content', () => {
+  test('renders content & title', () => {
     const blog = {
       title: 'Component testing is done with react-testing-library',
+      author: 'example',
       url: 'abc.com',
       likes: 0,
       user: {
@@ -15,12 +16,8 @@ describe('Test rendering of blog component', () => {
       }
     }
     window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(blog.user))
-    render(<Blog blog={blog} />)
-
-    screen.debug()
-
-    const element = screen.getByText('Component testing is done with react-testing-library')
-    screen.debug(element)
-    expect(element).toBeDefined()
+    const { container } = render(<Blog blog={blog} />)
+    const div = container.querySelector('.blog')
+    expect(div).toHaveTextContent('Component testing is done with react-testing-library example')
   })
 })

@@ -24,13 +24,13 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
+      blogService.
+        getAll().
+        then(initialBlogs => {
+          setBlogs(initialBlogs)
+        }
+        )
     }
-    blogService.
-      getAll().
-      then(initialBlogs => {
-        setBlogs(initialBlogs)
-      }
-      )
   }, [])
 
 
@@ -134,6 +134,7 @@ const App = () => {
       <div>
         username
         <input
+          id='username'
           type="text"
           value={username}
           name="Username"
@@ -143,13 +144,14 @@ const App = () => {
       <div>
         password
         <input
+          id='password'
           type="password"
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button id="login-button" type="submit">login</button>
     </form>
   )
 

@@ -36,3 +36,12 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
 
   cy.visit('')
 })
+
+Cypress.Commands.add('likeBlog', ({ blog, times }) => {
+  cy.contains(blog).find('#show-button').as('showButton')
+  cy.get('@showButton').click()
+  cy.contains(blog).find('#like-button').as('likeButton')
+  for (let step = 0; step < times; step++) {
+    cy.get('@likeButton').click()
+  }
+})

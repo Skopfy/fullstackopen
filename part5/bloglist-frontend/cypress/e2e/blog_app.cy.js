@@ -2,6 +2,7 @@ describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
     cy.request('POST', 'http://localhost:3003/api/users', { username: 'user', password: 'password' })
+    cy.request('POST', 'http://localhost:3003/api/users', { username: 'user2', password: 'password2' })
     cy.visit('http://localhost:3000')
   })
 
@@ -65,6 +66,21 @@ describe('Blog app', function () {
         cy.get('#delete-button').click()
         cy.get('.success').should('contain', 'Successfully deleted a blog.')
         cy.should('not.contain', 'another note cypress')
+      })
+
+      it('blog delete-button can only be seen by creator', function () {
+        cy.contains('Show').click()
+        cy.contains('Delete')
+        cy.get('#delete-button')
+        cy.get('#logout-button').click()
+        cy.request('POST', 'http://localhost:3003/api/login', {
+          username: 'user2', password: 'password2'
+        }).then(response => {
+          localStorage.setItem('loggedBlogAppUser', JSON.stringify(response.body))
+          cy.visit('http://localhost:3000')
+        })
+        cy.contains('Show').click()
+        cy.should('not.contain', 'Delete')
       })
     })
   })

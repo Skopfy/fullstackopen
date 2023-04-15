@@ -171,7 +171,7 @@ const App = () => {
         <Notification message={errorMessage} cla={'error'} />
         <Notification message={successMessage} cla={'success'} />
         {user && <div>
-          <p>{user.username} logged in <button onClick={handleLogout}>logout</button> </p>
+          <p>{user.username} logged in <button id='logout-button' onClick={handleLogout}>logout</button> </p>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogForm
               createBlog={addBlog}

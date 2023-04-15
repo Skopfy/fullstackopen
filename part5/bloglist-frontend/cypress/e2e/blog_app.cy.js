@@ -29,4 +29,43 @@ describe('Blog app', function () {
       cy.get('.error').should('have.css', 'border-style', 'solid')
     })
   })
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.request('POST', 'http://localhost:3003/api/login', {
+        username: 'user', password: 'password'
+      }).then(response => {
+        localStorage.setItem('loggedBlogAppUser', JSON.stringify(response.body))
+        cy.visit('http://localhost:3000')
+      })
+    })
+
+    it('A blog can be created', function () {
+      cy.contains('new blog').click()
+      cy.get('#title-input').type('a blog created by cypress')
+      cy.get('#author-input').type('Cypress')
+      cy.get('#url-input').type('www.cypress.com')
+      cy.contains('save').click()
+      cy.contains('a blog created by cypress Cypress')
+    })
+
+    describe('and a blog exists', function () {
+      beforeEach(function () {
+        cy.createBlog({ title: 'another note cypress', author: 'Me', url: 'hello.com' })
+      })
+
+      it('blog can be liked', function () {
+        cy.contains('Show').click()
+        cy.get('#like-button').click()
+        cy.contains('likes: 1')
+      })
+
+      it('blog can be deleted by the user who made it', function () {
+        cy.contains('Show').click()
+        cy.get('#delete-button').click()
+        cy.get('.success').should('contain', 'Successfully deleted a blog.')
+        cy.should('not.contain', 'another note cypress')
+      })
+    })
+  })
 })

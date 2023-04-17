@@ -17,6 +17,17 @@ const asObject = (anecdote) => {
     }
 }
 
+function compareVotes(a, b) {
+    if (a.votes < b.votes) {
+      return 1;
+    }
+    if (a.votes > b.votes) {
+      return -1;
+    }
+    return 0;
+  }
+  
+
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
@@ -34,6 +45,11 @@ const reducer = (state = initialState, action) => {
             return state.map(note =>
                 note.id !== id ? note : changedAnecdote
             )
+        case 'NEW_ANECDOTE':
+            return [...state, action.payload]
+        case 'SORT':
+            const newState = state.sort(compareVotes)
+            return newState
         default:
             return state
     }
@@ -43,10 +59,28 @@ const reducer = (state = initialState, action) => {
 
 export const vote = (id) => {
     return {
-      type: 'VOTE',
-      payload: { id }
+        type: 'VOTE',
+        payload: { id }
     }
-  }  
-  
+}
+
+export const createAnecdote = (anecdote) => {
+    return {
+        type: 'NEW_ANECDOTE',
+        payload: {
+            content: anecdote,
+            id: getId(),
+            votes: 0
+        }
+    }
+}
+
+export const sort = () => {
+    return {
+        type: 'SORT',
+        payload: {}
+    }
+}
+
 
 export default reducer

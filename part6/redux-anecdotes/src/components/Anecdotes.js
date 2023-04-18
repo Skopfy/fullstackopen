@@ -16,13 +16,16 @@ const Anecdote = ({ anecdote, handleClick }) => {
 }
 
 const AnecdoteList = () => {
-    const anecdotes = useSelector(state => state)
+    const anecdotes = useSelector(state => state.anecdotes)
+    const anecdoteFilter = useSelector(state => state.filter)
     const dispatch = useDispatch()
 
     return (
         <ul>
             {
-                anecdotes.map(anecdote =>
+                anecdotes
+                .filter(anecdote => anecdote.content.includes(anecdoteFilter))
+                .map(anecdote =>
                     <Anecdote
                         key={anecdote.id}
                         anecdote={anecdote}

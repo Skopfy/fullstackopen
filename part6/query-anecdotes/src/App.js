@@ -4,7 +4,6 @@ import { getAnecdotes, updateAnecdote } from './requests'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import NotificationContext from './notificationContext'
 import { notificationReducer } from './notificationContext'
-import { useContext } from 'react'
 import { useReducer } from 'react'
 
 const App = () => {

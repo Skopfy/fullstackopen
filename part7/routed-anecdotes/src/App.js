@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import Anecdote from './components/Anecdote'
 import Notification from './components/Notification'
+import  { useField } from './hooks'
 
 const padding = {
     paddingRight: 5
@@ -46,19 +47,22 @@ const Footer = () => (
 
 const CreateNew = (props) => {
     const navigate = useNavigate()
-    const [content, setContent] = useState('')
-    const [author, setAuthor] = useState('')
-    const [info, setInfo] = useState('')
-
+    //const [content, setContent] = useState('')
+    //const [author, setAuthor] = useState('')
+    //const [info, setInfo] = useState('')
+    const content = useField('')
+    const author = useField('')
+    const info = useField('')
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        props.addNew({
-            content,
-            author,
-            info,
+        const newAnecdote = {
+            content: content.value,
+            author: author.value,
+            info: info.value,
             votes: 0
-        })
+        }
+        props.addNew(newAnecdote)
         navigate('/')
     }
 
@@ -68,15 +72,15 @@ const CreateNew = (props) => {
             <form onSubmit={handleSubmit}>
                 <div>
                     content
-                    <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+                    <input name='content' type={content.type} value={content.value} onChange={(e) => content.onChange(e.target.value)} />
                 </div>
                 <div>
                     author
-                    <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+                    <input name='author' type={author.type} value={author.value} onChange={(e) => author.onChange(e.target.value)} />
                 </div>
                 <div>
                     url for more info
-                    <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+                    <input name='info' type={info.type} value={info.value} onChange={(e) => info.onChange(e.target.value)} />
                 </div>
                 <button>create</button>
             </form>

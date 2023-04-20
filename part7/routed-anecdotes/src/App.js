@@ -47,9 +47,6 @@ const Footer = () => (
 
 const CreateNew = (props) => {
     const navigate = useNavigate()
-    //const [content, setContent] = useState('')
-    //const [author, setAuthor] = useState('')
-    //const [info, setInfo] = useState('')
     const content = useField('')
     const author = useField('')
     const info = useField('')
@@ -64,6 +61,13 @@ const CreateNew = (props) => {
         }
         props.addNew(newAnecdote)
         navigate('/')
+    }
+
+    const handleReset = (e) => {
+        e.preventDefault()
+        content.reset()
+        author.reset()
+        info.reset()
     }
 
     return (
@@ -83,6 +87,7 @@ const CreateNew = (props) => {
                     <input name='info' type={info.type} value={info.value} onChange={(e) => info.onChange(e.target.value)} />
                 </div>
                 <button>create</button>
+                <button onClick={handleReset}>reset</button>
             </form>
         </div>
     )

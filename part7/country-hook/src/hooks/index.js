@@ -19,9 +19,10 @@ export const useField = (type) => {
     const [country, setCountry] = useState(null)
     useEffect(() => {
         axios
-		.get('https://restcountries.com/v3.1/all')
+		.get(`https://restcountries.com/v3.1/name/${name}?fullText=true`)
 		.then(response => {
             const countries = response.data
+            console.log(countries)
             const res = countries.filter(country => country.name.common.toLowerCase().includes(name.toLowerCase()))
             if (res.length !== 0) {
                 res[0].found = true
@@ -33,6 +34,9 @@ export const useField = (type) => {
                 setCountry(null)
             }
 		})
+        .catch(error =>{
+            setCountry({found: false})
+        })
     }, [name])
   
     return country

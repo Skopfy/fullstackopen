@@ -1,0 +1,21 @@
+Script started on 2023-04-23 16:34:32+02:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="203" LINES="55"]
+]0;skopfy@skopfy-HP-Pavilion-Gaming-Laptop-15-cx0xxx: ~/aalto_22/fullstackopen/part12-containers-applications/script-answers[01;32mskopfy@skopfy-HP-Pavilion-Gaming-Laptop-15-cx0xxx[00m:[01;34m~/aalto_22/fullstackopen/part12-containers-applications/script-answers[00m$ exit[1Pndcho "hello"[1Pnpm install[K[K[K[K[K[K[K[K[K[K[Kdco[K[Kocker run -it ubuntu bash
+[?2004h]0;root@30689db91def: /root@30689db91def:/# ls / /
+.dockerenv  boot/       etc/        lib/        lib64/      media/      opt/        root/       sbin/       sys/        usr/        
+bin/        dev/        home/       lib32/      libx32/     mnt/        proc/       run/        srv/        tmp/        var/        
+]0;root@30689db91def: /root@30689db91def:/# ls /usr/src/   
+sbin/  share/ src/   
+]0;root@30689db91def: /root@30689db91def:/# ls /usr/s
+sbin/  share/ src/   
+]0;root@30689db91def: /root@30689db91def:/# ls /usr/src/[1P[1P[1@c[1@d
+[?2004l[?2004h]0;root@30689db91def: /usr/srcroot@30689db91def:/usr/src# mkdir app
+[?2004l[?2004h]0;root@30689db91def: /usr/srcroot@30689db91def:/usr/src# ls
+[?2004l[0m[01;34mapp[0m
+[?2004h]0;root@30689db91def: /usr/srcroot@30689db91def:/usr/src# cd app/
+[?2004l[?2004h]0;root@30689db91def: /usr/src/approot@30689db91def:/usr/src/app# touch index.js
+[?2004l[?2004h]0;root@30689db91def: /usr/src/approot@30689db91def:/usr/src/app# [?2004l
+exit
+]0;skopfy@skopfy-HP-Pavilion-Gaming-Laptop-15-cx0xxx: ~/aalto_22/fullstackopen/part12-containers-applications/script-answers[01;32mskopfy@skopfy-HP-Pavilion-Gaming-Laptop-15-cx0xxx[00m:[01;34m~/aalto_22/fullstackopen/part12-containers-applications/script-answers[00m$ exit
+exit
+
+Script done on 2023-04-23 17:03:51+02:00 [COMMAND_EXIT_CODE="0"]

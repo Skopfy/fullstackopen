@@ -6,6 +6,9 @@ const configs = require('../util/config')
 
 let visits = 0
 
+
+redis.setAsync("added_todos", 0);
+
 /* GET index data. */
 router.get('/', async (req, res) => {
   visits++

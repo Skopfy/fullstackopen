@@ -6,8 +6,6 @@ services:
       dockerfile: ./dev.Dockerfile # This will simply tell which dockerfile to read
     volumes:
       - ./todo-frontend/:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
-    ports:
-      - 5001:3000
     container_name: todo-frontend-dev # This will name the container hello-front-dev
 
 
@@ -18,8 +16,6 @@ services:
       dockerfile: ./dev.Dockerfile
     volumes:
       - ./todo-backend/:/usr/src/app
-    ports:
-      - 3123:3123
     environment: 
       - REDIS_URL=redis://redis:6379
       - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database

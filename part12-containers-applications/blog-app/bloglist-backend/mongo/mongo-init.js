@@ -10,6 +10,5 @@ db.createUser({
 });
 
 db.createCollection('blogs');
-db.blogs.insert({ title: 'Write code', author: "Moikka", url: "moikka.com" });
 db.createCollection('users');
 db.users.insert({username: 'user', password: 'password'});

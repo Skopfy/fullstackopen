@@ -8,5 +8,6 @@ COPY . .
 RUN npm install
 
 ENV DANGEROUSLY_DISABLE_HOST_CHECK=true
+ENV REACT_APP_BACKEND_URL=http://localhost:8080
 
 CMD ["npm", "start"]

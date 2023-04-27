@@ -12,8 +12,8 @@ const middleware = require('./utils/middleware')
 app.use(cors())
 app.use(express.json())
 
-const mongoUrl = config.MONGODB_URI
-mongoose.connect(mongoUrl)
+const MONGO_URL = config.MONGODB_URI
+if (MONGO_URL && !mongoose.connection.readyState) mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 
 app.use(middleware.tokenExtractor)
 app.use('/api/blogs', middleware.userExtractor, blogRouter)

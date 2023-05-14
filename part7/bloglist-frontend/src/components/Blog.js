@@ -28,13 +28,13 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const increaseLike = () => {
     blog.likes = blog.likes + 1
     updateBlog(blog)
-    const msg = 'Successfully liked a blog!'
+    const msg = { message: 'Successfully liked a blog!', cla: 'success' }
     dispatch(notificationAddAndRemove(msg, 5))
   }
 
   const removeBlog = () => {
     deleteBlog(blog)
-    const msg = 'Successfully removed a blog!'
+    const msg = { message: 'Successfully removed a blog!', cla: 'success' }
     dispatch(notificationAddAndRemove(msg, 5))
   }
 

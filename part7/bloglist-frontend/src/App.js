@@ -15,9 +15,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
-
   const blogFormRef = useRef()
   const dispatch = useDispatch()
 
@@ -45,30 +42,18 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      const msg = 'Successfully logged in (Redux).'
+      const msg = { message: 'Successfully logged in (Redux).', cla: 'success' }
       dispatch(notificationAddAndRemove(msg, 5))
-      setSuccessMessage('Successfully logged in.')
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
     } catch (exception) {
-      const msg = 'Wrong credentials (Redux).'
+      const msg = { message: 'Wrong credentials (Redux).', cla: 'error' }
       dispatch(notificationAddAndRemove(msg, 5))
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
     }
   }
   const handleLogout = async () => {
     window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
-    const msg = 'Successfully logged out (Redux).'
+    const msg = { message: 'Successfully logged out (Redux).', cla: 'success' }
     dispatch(notificationAddAndRemove(msg, 5))
-    setSuccessMessage('Successfully logged out.')
-    setTimeout(() => {
-      setSuccessMessage(null)
-    }, 5000)
   }
 
   const addBlog = (blogObject) => {
@@ -77,17 +62,14 @@ const App = () => {
       .then((returnedBlog) => {
         returnedBlog.user = user
         setBlogs(blogs.concat(returnedBlog))
-        setSuccessMessage('Successfully added a blog.')
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
         blogFormRef.current.toggleVisibility()
       })
       .catch((error) => {
-        setErrorMessage(`Could not add a blog. Error: ${error}`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        const msg = {
+          message: `Successfully logged out (Redux).  Error: ${error}`,
+          cla: 'error'
+        }
+        dispatch(notificationAddAndRemove(msg, 5))
       })
   }
 
@@ -95,16 +77,18 @@ const App = () => {
     blogService
       .update(blogObject.id, blogObject)
       .then(() => {
-        setSuccessMessage('Successfully updated a blog.')
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
+        const msg = {
+          message: 'Successfully updated a blog (Redux).',
+          cla: 'success'
+        }
+        dispatch(notificationAddAndRemove(msg, 5))
       })
       .catch((error) => {
-        setErrorMessage(`Could not update a blog. Error: ${error}`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        const msg = {
+          message: `Could not update a blog (Redux).  Error: ${error}`,
+          cla: 'error'
+        }
+        dispatch(notificationAddAndRemove(msg, 5))
       })
   }
 
@@ -117,16 +101,18 @@ const App = () => {
           if (idx !== -1) {
             blogs.splice(idx, 1)
           }
-          setSuccessMessage('Successfully deleted a blog.')
-          setTimeout(() => {
-            setSuccessMessage(null)
-          }, 5000)
+          const msg = {
+            message: 'Successfully deleted a blog (Redux).',
+            cla: 'success'
+          }
+          dispatch(notificationAddAndRemove(msg, 5))
         })
         .catch((error) => {
-          setErrorMessage(`Could not delete the blog. Error: ${error}`)
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
+          const msg = {
+            message: `Could not delete a blog (Redux).  Error: ${error}`,
+            cla: 'error'
+          }
+          dispatch(notificationAddAndRemove(msg, 5))
         })
     }
   }
@@ -173,8 +159,7 @@ const App = () => {
     return (
       <div>
         <h1>Blogs app</h1>
-        <Notification message={errorMessage} cla={'error'} />
-        <Notification message={successMessage} cla={'success'} />
+        <Notification />
         {loginForm()}
       </div>
     )
@@ -182,8 +167,7 @@ const App = () => {
     return (
       <div>
         <h1>Blogs app</h1>
-        <Notification message={errorMessage} cla={'error'} />
-        <Notification message={successMessage} cla={'success'} />
+        <Notification />
         {user && (
           <div>
             <p>

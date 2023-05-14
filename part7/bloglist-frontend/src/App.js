@@ -6,6 +6,8 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { useDispatch } from 'react-redux'
+import { notificationAddAndRemove } from './reducers/notificationReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -17,6 +19,7 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState(null)
 
   const blogFormRef = useRef()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -42,11 +45,15 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      const msg = 'Successfully logged in (Redux).'
+      dispatch(notificationAddAndRemove(msg, 5))
       setSuccessMessage('Successfully logged in.')
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
     } catch (exception) {
+      const msg = 'Wrong credentials (Redux).'
+      dispatch(notificationAddAndRemove(msg, 5))
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
@@ -56,6 +63,8 @@ const App = () => {
   const handleLogout = async () => {
     window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
+    const msg = 'Successfully logged out (Redux).'
+    dispatch(notificationAddAndRemove(msg, 5))
     setSuccessMessage('Successfully logged out.')
     setTimeout(() => {
       setSuccessMessage(null)

@@ -1,8 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { notificationAddAndRemove } from '../reducers/notificationReducer'
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => {
+  const dispatch = useDispatch()
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -25,10 +28,14 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const increaseLike = () => {
     blog.likes = blog.likes + 1
     updateBlog(blog)
+    const msg = 'Successfully liked a blog!'
+    dispatch(notificationAddAndRemove(msg, 5))
   }
 
   const removeBlog = () => {
     deleteBlog(blog)
+    const msg = 'Successfully removed a blog!'
+    dispatch(notificationAddAndRemove(msg, 5))
   }
 
   const blogStyle = {

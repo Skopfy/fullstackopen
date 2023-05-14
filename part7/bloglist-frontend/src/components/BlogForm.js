@@ -1,7 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { notificationAddAndRemove } from '../reducers/notificationReducer'
 
 const BlogForm = ({ createBlog }) => {
+  const dispatch = useDispatch()
   const [newBlog, setNewBlog] = useState({
     title: '',
     author: '',
@@ -25,6 +28,8 @@ const BlogForm = ({ createBlog }) => {
       likes: 0,
       user: null
     })
+    const msg = 'Successfully added a blog!'
+    dispatch(notificationAddAndRemove(msg, 5))
   }
 
   const handleBlogChange = (event) => {

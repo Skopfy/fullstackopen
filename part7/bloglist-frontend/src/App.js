@@ -6,11 +6,12 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { notificationAddAndRemove } from './reducers/notificationReducer'
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(state => state.blogs)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -24,11 +25,9 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-      blogService.getAll().then((initialBlogs) => {
-        setBlogs(initialBlogs)
-      })
+      dispatch(initializeBlogs())
     }
-  }, [])
+  }, [dispatch])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -61,7 +60,7 @@ const App = () => {
       .create(blogObject)
       .then((returnedBlog) => {
         returnedBlog.user = user
-        setBlogs(blogs.concat(returnedBlog))
+        createBlog(returnedBlog)
         blogFormRef.current.toggleVisibility()
       })
       .catch((error) => {
@@ -115,16 +114,6 @@ const App = () => {
           dispatch(notificationAddAndRemove(msg, 5))
         })
     }
-  }
-
-  function compareBlogsByLikes(blogA, blogB) {
-    if (blogA.likes > blogB.likes) {
-      return -1
-    }
-    if (blogA.likes < blogB.likes) {
-      return 1
-    }
-    return 0
   }
 
   const loginForm = () => (
@@ -183,7 +172,7 @@ const App = () => {
         )}
 
         <h2>blogs</h2>
-        {blogs.sort(compareBlogsByLikes).map((blog) => (
+        {blogs.map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}

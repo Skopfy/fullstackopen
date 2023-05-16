@@ -2,8 +2,9 @@ import React from 'react'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { notificationAddAndRemove } from '../reducers/notificationReducer'
+import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = () => {
   const dispatch = useDispatch()
   const [newBlog, setNewBlog] = useState({
     title: '',
@@ -20,7 +21,8 @@ const BlogForm = ({ createBlog }) => {
       author: newBlog.author,
       url: newBlog.url
     }
-    createBlog(blogObject)
+    //createBlog(blogObject)
+    dispatch(createBlog(blogObject))
     setNewBlog({
       title: '',
       author: '',

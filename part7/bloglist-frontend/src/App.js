@@ -8,7 +8,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import { useDispatch, useSelector } from 'react-redux'
 import { notificationAddAndRemove } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
@@ -60,7 +60,6 @@ const App = () => {
       .create(blogObject)
       .then((returnedBlog) => {
         returnedBlog.user = user
-        createBlog(returnedBlog)
         blogFormRef.current.toggleVisibility()
       })
       .catch((error) => {
@@ -72,26 +71,7 @@ const App = () => {
       })
   }
 
-  const updateBlog = (blogObject) => {
-    blogService
-      .update(blogObject.id, blogObject)
-      .then(() => {
-        const msg = {
-          message: 'Successfully updated a blog (Redux).',
-          cla: 'success'
-        }
-        dispatch(notificationAddAndRemove(msg, 5))
-      })
-      .catch((error) => {
-        const msg = {
-          message: `Could not update a blog (Redux).  Error: ${error}`,
-          cla: 'error'
-        }
-        dispatch(notificationAddAndRemove(msg, 5))
-      })
-  }
-
-  const deleteBlog = (blogObject) => {
+  /*const deleteBlog = (blogObject) => {
     if (window.confirm('Do you really want to delete this blogpost?')) {
       blogService
         .remove(blogObject.id)
@@ -114,7 +94,7 @@ const App = () => {
           dispatch(notificationAddAndRemove(msg, 5))
         })
     }
-  }
+  }*/
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -176,8 +156,6 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            updateBlog={updateBlog}
-            deleteBlog={deleteBlog}
           />
         ))}
       </div>

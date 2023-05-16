@@ -3,8 +3,9 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { notificationAddAndRemove } from '../reducers/notificationReducer'
+import { like, deleteBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
+const Blog = ({ blog }) => {
   const dispatch = useDispatch()
   const [visible, setVisible] = useState(false)
 
@@ -26,14 +27,13 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   }
 
   const increaseLike = () => {
-    blog.likes = blog.likes + 1
-    updateBlog(blog)
+    dispatch(like(blog))
     const msg = { message: 'Successfully liked a blog!', cla: 'success' }
     dispatch(notificationAddAndRemove(msg, 5))
   }
 
   const removeBlog = () => {
-    deleteBlog(blog)
+    dispatch(deleteBlog(blog))
     const msg = { message: 'Successfully removed a blog!', cla: 'success' }
     dispatch(notificationAddAndRemove(msg, 5))
   }
@@ -82,9 +82,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
 }
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  updateBlog: PropTypes.func.isRequired,
-  deleteBlog: PropTypes.func.isRequired
+  blog: PropTypes.object.isRequired
 }
 
 export default Blog

@@ -1,23 +1,28 @@
 import React from 'react'
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { notificationAddAndRemove } from '../reducers/notificationReducer'
 import { like, deleteBlog } from '../reducers/blogReducer'
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
+  const loggedUser = useSelector((state) => state.user)
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
-  const loggedUser = JSON.parse(
+  /*const loggedUser = JSON.parse(
     window.localStorage.getItem('loggedBlogAppUser')
-  )
+  )*/
 
   const rightUser = () => {
-    return blog.user.username === loggedUser.username
+    if (loggedUser) {
+      return blog.user.username === loggedUser.username
+    } else {
+      return false
+    }
   }
 
   const showWhenRightUser = { display: rightUser() ? '' : 'none' }

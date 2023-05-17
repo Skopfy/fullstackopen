@@ -18,18 +18,14 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    //const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (user) {
       //const userParsed = JSON.parse(loggedUserJSON)
       //dispatch(loginUser(user))
-      //setUser(user)
-      //blogService.setToken(user.token)
       dispatch(initializeBlogs())
     }
   }, [dispatch, user])
 
   const handleLogout = async () => {
-    window.localStorage.removeItem('loggedBlogAppUser')
     dispatch(logout())
     const msg = { message: 'Successfully logged out (Redux).', cla: 'success' }
     dispatch(notificationAddAndRemove(msg, 5))

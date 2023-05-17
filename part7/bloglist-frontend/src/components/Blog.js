@@ -13,10 +13,6 @@ const Blog = ({ blog }) => {
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
-  /*const loggedUser = JSON.parse(
-    window.localStorage.getItem('loggedBlogAppUser')
-  )*/
-
   const rightUser = () => {
     if (loggedUser) {
       return blog.user.username === loggedUser.username

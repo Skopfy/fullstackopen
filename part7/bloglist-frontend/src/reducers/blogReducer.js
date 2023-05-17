@@ -28,7 +28,6 @@ const blogSlice = createSlice({
     removeBlog(state, action) {
       const id = action.payload.id
       const newState = state.filter((note) => note.id !== id)
-      console.log('state now: ', JSON.parse(JSON.stringify(newState)))
       return newState
     },
     // eslint-disable-next-line no-unused-vars

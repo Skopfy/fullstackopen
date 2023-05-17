@@ -1,13 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { notificationAddAndRemove } from '../reducers/notificationReducer'
 import { loginUser } from '../reducers/userReducer'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const handleLogin = async (event) => {
@@ -17,8 +16,6 @@ const LoginForm = () => {
       dispatch(loginUser(credentials))
       setUsername('')
       setPassword('')
-      const msg = { message: `${user.username} Successfully logged in (Redux).`, cla: 'success' }
-      dispatch(notificationAddAndRemove(msg, 5))
     } catch (exception) {
       const msg = { message: 'Wrong credentials (Redux).', cla: 'error' }
       dispatch(notificationAddAndRemove(msg, 5))

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import { notificationAddAndRemove } from '../reducers/notificationReducer'
 
 const initialState = null
 
@@ -28,6 +29,8 @@ export const loginUser = (user) => {
     const loggedInUser = await loginService.login(user)
     blogService.setToken(loggedInUser.token)
     dispatch(setUser(loggedInUser))
+    const msg = { message: `${user.username} Successfully logged in (Redux).`, cla: 'success' }
+    dispatch(notificationAddAndRemove(msg, 5))
   }
 }
 

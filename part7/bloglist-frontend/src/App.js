@@ -1,35 +1,34 @@
 import React from 'react'
-import { useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import { useEffect } from 'react'
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import About from './components/About'
+import Logout from './components/Logout'
+import BlogList from './components/BlogList'
 import { useDispatch, useSelector } from 'react-redux'
-import { notificationAddAndRemove } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
-import { logout } from './reducers/userReducer'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+  //useNavigate
+} from 'react-router-dom'
+
+const padding = {
+  paddingRight: 5
+}
 
 const App = () => {
-  const blogs = useSelector(state => state.blogs)
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
 
-  const blogFormRef = useRef()
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (user) {
-      //const userParsed = JSON.parse(loggedUserJSON)
-      //dispatch(loginUser(user))
       dispatch(initializeBlogs())
     }
   }, [dispatch, user])
-
-  const handleLogout = async () => {
-    dispatch(logout())
-    const msg = { message: 'Successfully logged out (Redux).', cla: 'success' }
-    dispatch(notificationAddAndRemove(msg, 5))
-  }
 
   if (!user) {
     return (
@@ -41,31 +40,27 @@ const App = () => {
     )
   } else {
     return (
-      <div>
-        <h1>Blogs app</h1>
-        <Notification />
-        {user && (
-          <div>
-            <p>
-              {user.username} logged in{' '}
-              <button id="logout-button" onClick={handleLogout}>
-                logout
-              </button>{' '}
-            </p>
-            <Togglable buttonLabel="new blog" ref={blogFormRef}>
-              <BlogForm />
-            </Togglable>
-          </div>
-        )}
-
-        <h2>blogs</h2>
-        {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-          />
-        ))}
-      </div>
+      <Router>
+        <div>
+          <h1>Blogs app</h1>
+          <Link style={padding} to="/">
+            Main
+          </Link>
+          <Link style={padding} to="/userinfo">
+            User info
+          </Link>
+          <Notification />
+          {user && (
+            <div>
+              <Logout />
+            </div>
+          )}
+          <Routes>
+            <Route path="/" element={<BlogList />} />
+            <Route path="/userinfo" element={<About />} />
+          </Routes>
+        </div>
+      </Router>
     )
   }
 }

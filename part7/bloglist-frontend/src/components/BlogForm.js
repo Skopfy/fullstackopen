@@ -21,7 +21,6 @@ const BlogForm = () => {
       author: newBlog.author,
       url: newBlog.url
     }
-    //createBlog(blogObject)
     dispatch(createBlog(blogObject))
     setNewBlog({
       title: '',

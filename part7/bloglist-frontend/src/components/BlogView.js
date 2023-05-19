@@ -8,6 +8,7 @@ import { notificationAddAndRemove } from '../reducers/notificationReducer'
 
 const BlogView = () => {
   const [blog, setBlog] = useState([])
+  const [comment, setComment] = useState('')
   const id = useParams().id
   const dispatch = useDispatch()
 
@@ -23,8 +24,18 @@ const BlogView = () => {
     dispatch(notificationAddAndRemove(msg, 5))
   }
 
-  const postComment = () => {}
+  //const postComment = () => {}
 
+  const postComment = async (event) => {
+    event.preventDefault()
+    const commentObject = { content: comment }
+    await blogService.createComment(blog.id, commentObject)
+    setComment('')
+  }
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value)
+  }
   return (
     <div>
       <h2>
@@ -41,12 +52,19 @@ const BlogView = () => {
       </div>
       {blog.user && <p> Added by {blog.user.username} </p>}
       <h3> Comments </h3>
-      <button id="comment-button" onClick={postComment}>
-        New Comment
-      </button>{' '}
-      {blog.comments && blog.comments.map((comment) => (
-        <p key={comment.id}> {comment.content} </p>
-      ))}
+      <form onSubmit={postComment}>
+        <div>
+          Comment
+          <input name="url" onChange={handleCommentChange} id="comment-input" />
+        </div>
+        <button type="submit">Post comment</button>
+      </form>
+      <ul>
+        {blog.comments &&
+          blog.comments.map((comment) => (
+            <li key={comment._id}> {comment.content} </li>
+          ))}
+      </ul>
     </div>
   )
 }

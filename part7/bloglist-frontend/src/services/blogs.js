@@ -37,5 +37,12 @@ const remove = async (id) => {
   return response.data
 }
 
+const createComment = async (id, comment) => {
+  const config = { headers: { Authorization: token } }
+  const response = await axios.post(baseUrl + `/${id}/comments`, comment, config)
+  console.log(response)
+  return response.data
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { setToken, getAll, get, create, update, remove }
+export default { setToken, getAll, get, create, update, remove, createComment }

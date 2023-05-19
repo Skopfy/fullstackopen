@@ -14,7 +14,7 @@ const Blog = ({ blog }) => {
   const showWhenVisible = { display: visible ? '' : 'none' }
 
   const rightUser = () => {
-    if (loggedUser) {
+    if (loggedUser && blog.user) {
       return blog.user.username === loggedUser.username
     } else {
       return false
@@ -69,7 +69,7 @@ const Blog = ({ blog }) => {
               Like
             </button>{' '}
           </div>
-          {blog.user.username}
+          {blog.user && (<div> {blog.user.username} </div>)}
         </div>
         <div style={showWhenRightUser}>
           {' '}

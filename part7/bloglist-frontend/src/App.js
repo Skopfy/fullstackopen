@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import About from './components/About'
+import User from './components/User'
 import Logout from './components/Logout'
 import BlogList from './components/BlogList'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,7 +13,6 @@ import {
   Routes,
   Route,
   Link
-  //useNavigate
 } from 'react-router-dom'
 
 const padding = {
@@ -46,7 +46,7 @@ const App = () => {
           <Link style={padding} to="/">
             Main
           </Link>
-          <Link style={padding} to="/userinfo">
+          <Link style={padding} to="/users">
             User info
           </Link>
           <Notification />
@@ -57,7 +57,8 @@ const App = () => {
           )}
           <Routes>
             <Route path="/" element={<BlogList />} />
-            <Route path="/userinfo" element={<About />} />
+            <Route path="/users" element={<About />} />
+            <Route path="/users/:id" element={<User/>} />
           </Routes>
         </div>
       </Router>

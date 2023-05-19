@@ -12,5 +12,12 @@ const getAll = async () => {
   return response.data
 }
 
+const get = async (id) => {
+  const config = { headers: { Authorization: token } }
+  const url = baseUrl + `/${id}`
+  const response = await axios.get(url, config)
+  return response.data
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, setToken }
+export default { getAll, get, setToken }

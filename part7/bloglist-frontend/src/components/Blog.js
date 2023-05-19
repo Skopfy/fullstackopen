@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { notificationAddAndRemove } from '../reducers/notificationReducer'
 import { like, deleteBlog } from '../reducers/blogReducer'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
@@ -48,7 +49,9 @@ const Blog = ({ blog }) => {
   }
   return (
     <div style={blogStyle} className="blog">
-      {blog.title} {blog.author}{' '}
+      <Link to={`/blogs/${blog.id}`}>
+        {blog.title} {blog.author}{' '}
+      </Link>
       <button onClick={toggleVisibility} style={showWhenVisible}>
         Hide
       </button>
@@ -69,7 +72,7 @@ const Blog = ({ blog }) => {
               Like
             </button>{' '}
           </div>
-          {blog.user && (<div> {blog.user.username} </div>)}
+          {blog.user && <div> {blog.user.username} </div>}
         </div>
         <div style={showWhenRightUser}>
           {' '}

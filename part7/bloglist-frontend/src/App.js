@@ -5,15 +5,11 @@ import LoginForm from './components/LoginForm'
 import About from './components/About'
 import User from './components/User'
 import Logout from './components/Logout'
+import BlogView from './components/BlogView.js'
 import BlogList from './components/BlogList'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link
-} from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 const padding = {
   paddingRight: 5
@@ -42,23 +38,24 @@ const App = () => {
     return (
       <Router>
         <div>
-          <h1>Blogs app</h1>
           <Link style={padding} to="/">
-            Main
+            Main/Blogs
           </Link>
           <Link style={padding} to="/users">
-            User info
+            Users
           </Link>
-          <Notification />
           {user && (
             <div>
               <Logout />
             </div>
           )}
+          <h1>Blogs app</h1>
+          <Notification />
           <Routes>
             <Route path="/" element={<BlogList />} />
+            <Route path="/blogs/:id" element={<BlogView />} />
             <Route path="/users" element={<About />} />
-            <Route path="/users/:id" element={<User/>} />
+            <Route path="/users/:id" element={<User />} />
           </Routes>
         </div>
       </Router>

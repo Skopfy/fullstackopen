@@ -23,6 +23,8 @@ const BlogView = () => {
     dispatch(notificationAddAndRemove(msg, 5))
   }
 
+  const postComment = () => {}
+
   return (
     <div>
       <h2>
@@ -38,6 +40,13 @@ const BlogView = () => {
         </button>{' '}
       </div>
       {blog.user && <p> Added by {blog.user.username} </p>}
+      <h3> Comments </h3>
+      <button id="comment-button" onClick={postComment}>
+        New Comment
+      </button>{' '}
+      {blog.comments && blog.comments.map((comment) => (
+        <p key={comment.id}> {comment.content} </p>
+      ))}
     </div>
   )
 }

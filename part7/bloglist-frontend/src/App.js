@@ -43,12 +43,7 @@ const App = () => {
           </Link>
           <Link style={padding} to="/users">
             Users
-          </Link>
-          {user && (
-            <div>
-              <Logout />
-            </div>
-          )}
+          </Link>   {user && <Logout />}
           <h1>Blogs app</h1>
           <Notification />
           <Routes>

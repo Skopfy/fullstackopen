@@ -16,15 +16,13 @@ const BlogView = () => {
     blogService.get(id).then((result) => {
       setBlog(result)
     })
-  }, [])
+  }, [blog])
 
   const increaseLike = () => {
     dispatch(like(blog))
     const msg = { message: 'Successfully liked a blog!', cla: 'success' }
     dispatch(notificationAddAndRemove(msg, 5))
   }
-
-  //const postComment = () => {}
 
   const postComment = async (event) => {
     event.preventDefault()

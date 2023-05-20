@@ -23,6 +23,7 @@ const userSlice = createSlice({
 export const loginUser = (user) => {
   return async (dispatch) => {
     const loggedInUser = await loginService.login(user)
+    window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(loggedInUser))
     blogService.setToken(loggedInUser.token)
     userService.setToken(loggedInUser.token)
     dispatch(setUser(loggedInUser))

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { notificationAddAndRemove } from '../reducers/notificationReducer'
 import { like, deleteBlog } from '../reducers/blogReducer'
 import { Link } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
@@ -48,40 +49,42 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
   return (
-    <div style={blogStyle} className="blog">
-      <Link to={`/blogs/${blog.id}`}>
-        {blog.title} {blog.author}{' '}
-      </Link>
-      <button onClick={toggleVisibility} style={showWhenVisible}>
-        Hide
-      </button>
-      <button
-        id="show-button"
-        onClick={toggleVisibility}
-        style={hideWhenVisible}
-      >
-        Show
-      </button>
+    <tr style={blogStyle} className="blog">
+      <td>
+        <Link to={`/blogs/${blog.id}`}>
+          {blog.title} {blog.author}{' '}
+        </Link>
+        <Button onClick={toggleVisibility} style={showWhenVisible}>
+          Hide
+        </Button>
+        <Button
+          id="show-button"
+          onClick={toggleVisibility}
+          style={hideWhenVisible}
+        >
+          Show
+        </Button>
+      </td>
       <div style={showWhenVisible} className="blog_hidden">
         <div>
-          {blog.url}
+          <td> {blog.url} </td>
           <div>
             {' '}
             likes: {blog.likes}{' '}
-            <button id="like-button" onClick={increaseLike}>
+            <Button id="like-button" onClick={increaseLike}>
               Like
-            </button>{' '}
+            </Button>{' '}
           </div>
           {blog.user && <div> {blog.user.username} </div>}
         </div>
         <div style={showWhenRightUser}>
           {' '}
-          <button id="delete-button" onClick={removeBlog}>
+          <Button id="delete-button" onClick={removeBlog}>
             Delete
-          </button>{' '}
+          </Button>{' '}
         </div>
       </div>
-    </div>
+    </tr>
   )
 }
 

@@ -1,8 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { notificationAddAndRemove } from '../reducers/notificationReducer'
 import { loginUser } from '../reducers/userReducer'
+import { Form, Button } from 'react-bootstrap'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')
@@ -11,19 +11,14 @@ const LoginForm = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    try {
-      const credentials = { username: username, password: password }
-      dispatch(loginUser(credentials))
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      const msg = { message: 'Wrong credentials (Redux).', cla: 'error' }
-      dispatch(notificationAddAndRemove(msg, 5))
-    }
+    const credentials = { username: username, password: password }
+    dispatch(loginUser(credentials))
+    setUsername('')
+    setPassword('')
   }
 
   return (
-    <form onSubmit={handleLogin}>
+    <Form onSubmit={handleLogin}>
       <div>
         username
         <input
@@ -44,10 +39,10 @@ const LoginForm = () => {
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button id="login-button" type="submit">
+      <Button variant='primary' id="login-button" type="submit">
         login
-      </button>
-    </form>
+      </Button>
+    </Form>
   )
 }
 

@@ -22,19 +22,33 @@ const userSlice = createSlice({
 
 export const loginUser = (user) => {
   return async (dispatch) => {
-    const loggedInUser = await loginService.login(user)
-    window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(loggedInUser))
-    blogService.setToken(loggedInUser.token)
-    userService.setToken(loggedInUser.token)
-    dispatch(setUser(loggedInUser))
-    const msg = { message: `${user.username} Successfully logged in (Redux).`, cla: 'success' }
-    dispatch(notificationAddAndRemove(msg, 5))
+    loginService
+      .login(user)
+      .then((loggedInUser) => {
+        window.localStorage.setItem(
+          'loggedBlogAppUser',
+          JSON.stringify(loggedInUser)
+        )
+        blogService.setToken(loggedInUser.token)
+        userService.setToken(loggedInUser.token)
+        dispatch(setUser(loggedInUser))
+        const msg = {
+          message: `${user.username} Successfully logged in (Redux).`,
+          cla: 'success'
+        }
+        dispatch(notificationAddAndRemove(msg, 5))
+      })
+      .catch(() => {
+        const msg = { message: 'Wrong credentials.', cla: 'danger' }
+        dispatch(notificationAddAndRemove(msg, 5))
+      })
   }
 }
 
 export const logout = () => {
   return async (dispatch) => {
     dispatch(removeUser())
+    window.localStorage.removeItem('loggedBlogAppUser')
   }
 }
 

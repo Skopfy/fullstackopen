@@ -1,4 +1,5 @@
 import React from 'react'
+import { Alert } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 
 const Notification = () => {
@@ -6,7 +7,7 @@ const Notification = () => {
   if (notification.message === '') {
     return <div></div>
   } else {
-    return <div className={notification.cla}>{notification.message}</div>
+    return <Alert variant={notification.cla}>{notification.message}</Alert>
   }
 }
 
